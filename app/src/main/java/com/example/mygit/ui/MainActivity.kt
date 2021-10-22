@@ -1,14 +1,13 @@
 package com.example.mygit.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.mygit.App
 import com.example.mygit.R
 import com.example.mygit.ui.users.Screen
-import com.example.mygit.ui.users.UsersFragment
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import moxy.MvpAppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : MvpAppCompatActivity() {
     private val navigator = AppNavigator(this, R.id.main_container)
     private val navigatorHolder = App.navigatorHolder
 

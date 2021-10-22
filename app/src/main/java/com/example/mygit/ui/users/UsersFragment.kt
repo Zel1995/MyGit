@@ -15,7 +15,7 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
     private var viewBinding: FragmentUsersBinding? = null
     private val presenter by moxyPresenter { UsersPresenter(MockRepositoryImpl(), App.router) }
     private val adapter = UsersAdapter {
-        App.router.navigateTo(Screen.details(it))
+        presenter.onUser(it)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -2,29 +2,32 @@ package com.example.mygit.data
 
 import com.example.mygit.domain.model.GitUser
 import com.example.mygit.domain.repository.Repository
-import java.util.*
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
+import java.util.concurrent.TimeUnit
 
 class MockRepositoryImpl : Repository {
     private val users = mutableListOf<GitUser>(
-        GitUser(UUID.randomUUID().toString(), "Иван", 19),
-        GitUser(UUID.randomUUID().toString(), "Кристина", 20),
-        GitUser(UUID.randomUUID().toString(), "Сергей", 21),
-        GitUser(UUID.randomUUID().toString(), "Дмитрий", 22),
-        GitUser(UUID.randomUUID().toString(), "Владимир", 23),
-        GitUser(UUID.randomUUID().toString(), "Александра", 24),
-        GitUser(UUID.randomUUID().toString(), "Алексей", 25),
-        GitUser(UUID.randomUUID().toString(), "Кирилл", 26),
+        GitUser("1", "Иван", 19),
+        GitUser("2", "Кристина", 20),
+        GitUser("3", "Сергей", 21),
+        GitUser("4", "Дмитрий", 22),
+        GitUser("5", "Владимир", 23),
+        GitUser("6", "Александра", 24),
+        GitUser("7", "Алексей", 25),
+        GitUser("8", "Кирилл", 26),
     )
 
-    override fun getUsers(): List<GitUser> {
-        return users
+    override fun getUsers(): Single<List<GitUser>> {
+        return Single.just(users)
     }
 
-    override fun getUser(id: String): GitUser? {
+    override fun getUser(id: String): Maybe<GitUser> {
         users.forEach{if(it.id == id){
-            return it
+            return Maybe.just(it)
         } }
-        return null
+        return Maybe.empty()
     }
 
     override fun addUser(user: GitUser) {
