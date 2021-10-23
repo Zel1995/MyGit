@@ -8,12 +8,15 @@ import com.example.mygit.R
 import com.example.mygit.data.MockRepositoryImpl
 import com.example.mygit.databinding.FragmentUsersBinding
 import com.example.mygit.domain.model.GitUser
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
 class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContract.View {
     private var viewBinding: FragmentUsersBinding? = null
     private val presenter by moxyPresenter { UsersPresenter(MockRepositoryImpl(), App.router) }
+    private val compositeDisposable = CompositeDisposable()
     private val adapter = UsersAdapter {
         presenter.onUser(it)
     }
@@ -22,6 +25,13 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentUsersBinding.bind(view)
         initRv()
+        initBus()
+    }
+
+    private fun initBus() {
+        compositeDisposable += (requireActivity().application as App).counterBus.get().subscribe{
+            presenter.like(it)
+        }
     }
 
     private fun initRv() {
@@ -35,5 +45,10 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
 
     override fun setUsers(list: List<GitUser>) {
         adapter.setUsers(list)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 }
