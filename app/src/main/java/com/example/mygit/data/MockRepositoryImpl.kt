@@ -21,7 +21,7 @@ class MockRepositoryImpl : Repository {
     )
 
     override fun getUsers(): Observable<MutableList<GitUser>> {
-        return BehaviorSubject.createDefault(users).delay(1, TimeUnit.SECONDS)
+        return BehaviorSubject.createDefault(users).delay(2, TimeUnit.SECONDS)
     }
 
     override fun getUser(id: String): Maybe<GitUser> {

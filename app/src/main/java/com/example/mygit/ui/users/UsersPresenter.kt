@@ -18,16 +18,19 @@ class UsersPresenter(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        viewState.setState(UsersContract.ViewBehavior.LOADING)
         compositeDisposable += repository.getUsers()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewState.setUsers(it)
             }, { viewState.setState(UsersContract.ViewBehavior.ERROR) })
+        viewState.setState(UsersContract.ViewBehavior.IDLE)
     }
 
     override fun onUser(gitUser: GitUser) {
         router.navigateTo(Screen.details(gitUser))
+        viewState.setState(UsersContract.ViewBehavior.SUCCESS)
     }
 
     override fun like(like: EventBus.Like) {

@@ -2,6 +2,7 @@ package com.example.mygit.ui.users
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mygit.App
 import com.example.mygit.R
@@ -29,7 +30,7 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
     }
 
     private fun initBus() {
-        compositeDisposable += (requireActivity().application as App).counterBus.get().subscribe{
+        compositeDisposable += (requireActivity().application as App).counterBus.get().subscribe {
             presenter.like(it)
         }
     }
@@ -40,7 +41,28 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
     }
 
     override fun setState(state: UsersContract.ViewBehavior) {
+        hideViews()
+        when (state) {
+            UsersContract.ViewBehavior.IDLE -> {
+                viewBinding?.rvUsers?.visibility = View.VISIBLE
+            }
+            UsersContract.ViewBehavior.SUCCESS -> {
+                viewBinding?.rvUsers?.visibility = View.VISIBLE
+                Toast.makeText(context, getString(R.string.success), Toast.LENGTH_SHORT).show()
+            }
+            UsersContract.ViewBehavior.ERROR -> {
+                viewBinding?.rvUsers?.visibility = View.VISIBLE
+                Toast.makeText(context, getString(R.string.error), Toast.LENGTH_SHORT).show()
+            }
+            UsersContract.ViewBehavior.LOADING -> {
+                viewBinding?.progress?.visibility = View.VISIBLE
+            }
+        }
+    }
 
+    private fun hideViews() {
+        viewBinding?.rvUsers?.visibility = View.GONE
+        viewBinding?.progress?.visibility = View.GONE
     }
 
     override fun setUsers(list: List<GitUser>) {
