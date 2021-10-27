@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.mygit.R
 import com.example.mygit.data.bus.EventBus
 import com.example.mygit.domain.model.GitUser
@@ -33,10 +34,10 @@ class UsersAdapter(
     override fun onBindViewHolder(holder: UsersAdapter.UsersViewHolder, position: Int) {
         val item = users[position]
         with(holder) {
-            name.text= item.name
-            age.text = item.age.toString()
-            if(item.like){ like.setImageResource(R.drawable.ic_like)}
-            else{like.setImageResource(R.drawable.ic_like_not)}
+            login.text= item.login
+            Glide.with(avatar)
+                .load(item.avatarUrl)
+                .into(avatar)
         }
     }
 
@@ -45,9 +46,8 @@ class UsersAdapter(
     }
 
     inner class UsersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.findViewById(R.id.tv_name)
-        val age: TextView = itemView.findViewById(R.id.tv_age)
-        val like :ImageView = itemView.findViewById(R.id.like_image_view)
+        val login: TextView = itemView.findViewById(R.id.login_text_view)
+        val avatar: ImageView = itemView.findViewById(R.id.avatar_image_view)
         init {
             itemView.setOnClickListener { itemClicked(users[adapterPosition]) }
         }

@@ -14,7 +14,7 @@ class MainActivity : MvpAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        App.router.navigateTo(Screen.users())
+        App.router.navigateTo(Screen.repos())
     }
 
     override fun onResumeFragments() {
