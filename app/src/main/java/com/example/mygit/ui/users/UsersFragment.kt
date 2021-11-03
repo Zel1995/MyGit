@@ -1,22 +1,32 @@
 package com.example.mygit.ui.users
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mygit.App
+import com.example.mygit.di.App
 import com.example.mygit.R
-import com.example.mygit.data.MockRepositoryImpl
+import com.example.mygit.data.RepositoryImpl
+import com.example.mygit.data.network.RetrofitBuilder
+import com.example.mygit.data.storage.GitRepositoriesCache
+import com.example.mygit.data.storage.GitUsersCache
 import com.example.mygit.databinding.FragmentUsersBinding
 import com.example.mygit.domain.model.GitUser
+import com.example.mygit.ui.MainActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
 class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContract.View {
     private var viewBinding: FragmentUsersBinding? = null
-    private val presenter by moxyPresenter { UsersPresenter(MockRepositoryImpl(), App.router) }
+    @Inject
+    lateinit var usersPresenter: UsersPresenter
+    private val presenter by moxyPresenter {
+        usersPresenter
+    }
     private val compositeDisposable = CompositeDisposable()
     private val adapter = UsersAdapter {
         presenter.onUser(it)
@@ -26,14 +36,8 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentUsersBinding.bind(view)
         initRv()
-        initBus()
     }
 
-    private fun initBus() {
-        compositeDisposable += (requireActivity().application as App).counterBus.get().subscribe {
-            presenter.like(it)
-        }
-    }
 
     private fun initRv() {
         viewBinding?.rvUsers?.adapter = adapter
@@ -55,18 +59,23 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
                 Toast.makeText(context, getString(R.string.error), Toast.LENGTH_SHORT).show()
             }
             UsersContract.ViewBehavior.LOADING -> {
-                viewBinding?.progress?.visibility = View.VISIBLE
+                viewBinding?.progressBar?.visibility = View.VISIBLE
             }
         }
     }
 
     private fun hideViews() {
         viewBinding?.rvUsers?.visibility = View.GONE
-        viewBinding?.progress?.visibility = View.GONE
+        viewBinding?.progressBar?.visibility = View.GONE
     }
 
     override fun setUsers(list: List<GitUser>) {
         adapter.setUsers(list)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (context as? MainActivity)?.mainSubcomponent?.inject(this)
     }
 
     override fun onDestroy() {

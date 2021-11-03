@@ -1,13 +1,10 @@
 package com.example.mygit.domain.repository
 
-import com.example.mygit.data.bus.EventBus
-import com.example.mygit.domain.model.GitUser
-import io.reactivex.Maybe
+import com.example.mygit.data.storage.entities.GitHubRepositoryEntity
+import com.example.mygit.data.storage.entities.GitUserEntity
 import io.reactivex.Observable
 
 interface Repository {
-    fun getUsers(): Observable<MutableList<GitUser>>
-    fun getUser(id: String): Maybe<GitUser>
-    fun addUser(user: GitUser)
-    fun setLike(like:EventBus.Like)
+    fun getUsers(): Observable<List<GitUserEntity>>
+    fun getRepos(login: String): Observable<List<GitHubRepositoryEntity>>
 }
