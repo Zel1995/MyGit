@@ -3,13 +3,15 @@ package com.example.mygit.ui.users
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mygit.R
+import com.example.mygit.data.bus.EventBus
 import com.example.mygit.domain.model.GitUser
 
 class UsersAdapter(
-    private val itemClicked: (user: GitUser) -> Unit
+    private val itemClicked: (user: GitUser) -> Unit,
 ) :
     RecyclerView.Adapter<UsersAdapter.UsersViewHolder>() {
     override fun onCreateViewHolder(
@@ -33,6 +35,8 @@ class UsersAdapter(
         with(holder) {
             name.text= item.name
             age.text = item.age.toString()
+            if(item.like){ like.setImageResource(R.drawable.ic_like)}
+            else{like.setImageResource(R.drawable.ic_like_not)}
         }
     }
 
@@ -43,7 +47,7 @@ class UsersAdapter(
     inner class UsersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.tv_name)
         val age: TextView = itemView.findViewById(R.id.tv_age)
-
+        val like :ImageView = itemView.findViewById(R.id.like_image_view)
         init {
             itemView.setOnClickListener { itemClicked(users[adapterPosition]) }
         }
