@@ -1,6 +1,5 @@
 package com.example.mygit.ui.users
 
-import com.example.mygit.data.bus.EventBus
 import com.example.mygit.domain.model.GitUser
 import moxy.MvpPresenter
 import moxy.MvpView
@@ -22,6 +21,5 @@ abstract class UsersContract {
 
     abstract class Presenter : MvpPresenter<View>() {
         abstract fun onUser(gitUser: GitUser)
-        abstract fun like(like: EventBus.Like)
     }
 }

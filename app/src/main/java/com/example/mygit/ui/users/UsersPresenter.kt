@@ -1,6 +1,5 @@
 package com.example.mygit.ui.users
 
-import com.example.mygit.data.bus.EventBus
 import com.example.mygit.domain.model.GitUser
 import com.example.mygit.domain.repository.Repository
 import com.github.terrakok.cicerone.Router
@@ -44,9 +43,6 @@ class UsersPresenter(
         viewState.setState(UsersContract.ViewBehavior.SUCCESS)
     }
 
-    override fun like(like: EventBus.Like) {
-        //repository.setLike(like)
-    }
 
     override fun onDestroy() {
         super.onDestroy()

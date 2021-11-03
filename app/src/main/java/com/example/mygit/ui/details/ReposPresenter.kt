@@ -2,6 +2,7 @@ package com.example.mygit.ui.details
 
 import com.example.mygit.data.RepositoryImpl
 import com.example.mygit.domain.model.GitHubRepository
+import com.example.mygit.domain.repository.Repository
 import com.example.mygit.ui.users.Screen
 import com.github.terrakok.cicerone.Router
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,7 +10,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.schedulers.Schedulers
 
-class ReposPresenter(private val repository: RepositoryImpl, private val router: Router) :
+class ReposPresenter(private val repository: Repository, private val router: Router) :
     UserContract.Presenter() {
     private val compositeDisposable = CompositeDisposable()
     override fun onRepository(gitHubRepository: GitHubRepository) {

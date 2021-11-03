@@ -1,20 +1,21 @@
 package com.example.mygit.ui.details
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.example.mygit.App
 import com.example.mygit.R
-import com.example.mygit.data.RepositoryImpl
-import com.example.mygit.data.network.RetrofitBuilder
 import com.example.mygit.data.storage.GitRepositoriesCache
-import com.example.mygit.data.storage.GitUsersCache
 import com.example.mygit.databinding.FragmentReposBinding
+import com.example.mygit.di.App
 import com.example.mygit.domain.model.GitHubRepository
 import com.example.mygit.domain.model.GitUser
+import com.example.mygit.domain.repository.Repository
+import com.example.mygit.ui.MainActivity
 import io.reactivex.disposables.CompositeDisposable
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
 class ReposFragment : MvpAppCompatFragment(R.layout.fragment_repos), UserContract.View {
     companion object {
@@ -27,17 +28,14 @@ class ReposFragment : MvpAppCompatFragment(R.layout.fragment_repos), UserContrac
             }
     }
 
+    @Inject
+    lateinit var reposPresenter: ReposPresenter
+
     private val adapter = ReposAdapter {
         presenter.onRepository(it)
     }
     private val presenter by moxyPresenter {
-        ReposPresenter(
-            RepositoryImpl(
-                RetrofitBuilder.create(), GitUsersCache(App.getDao()),
-                GitRepositoriesCache(App.getDao())
-            ),
-            App.router
-        )
+        reposPresenter
     }
     private val compositeDisposable = CompositeDisposable()
     private var viewBinding: FragmentReposBinding? = null
@@ -55,6 +53,10 @@ class ReposFragment : MvpAppCompatFragment(R.layout.fragment_repos), UserContrac
         viewBinding?.reposRecyclerView?.adapter = adapter
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (context as? MainActivity)?.mainSubcomponent?.inject(this)
+    }
 
     override fun onDestroy() {
         super.onDestroy()

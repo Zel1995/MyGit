@@ -9,7 +9,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".App"
+        android:name=".di.App"
         android:theme="@style/Theme.MyGit">
         <activity android:name=".ui.MainActivity">
             <intent-filter>

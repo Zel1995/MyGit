@@ -2,8 +2,9 @@ package com.example.mygit.data.storage
 
 import com.example.mygit.data.storage.entities.GitUserEntity
 import io.reactivex.Single
+import javax.inject.Inject
 
-class GitUsersCache(private val dao: GitHubDao) {
+class GitUsersCache @Inject constructor(private val dao: GitHubDao) {
     fun getUsers(): Single<List<GitUserEntity>> {
         return dao.getGitUsers()
     }
