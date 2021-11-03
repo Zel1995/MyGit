@@ -21,6 +21,17 @@ class UsersPresenter(
         viewState.setState(UsersContract.ViewBehavior.LOADING)
         compositeDisposable += repository.getUsers()
             .subscribeOn(Schedulers.io())
+            .map {
+                it.map { userEntity ->
+                    GitUser(
+                        userEntity.id,
+                        userEntity.login,
+                        userEntity.avatarUrl,
+                        userEntity.url,
+                        userEntity.reposUrl
+                    )
+                }
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewState.setUsers(it)
@@ -34,7 +45,7 @@ class UsersPresenter(
     }
 
     override fun like(like: EventBus.Like) {
-        repository.setLike(like)
+        //repository.setLike(like)
     }
 
     override fun onDestroy() {

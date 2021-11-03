@@ -6,7 +6,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mygit.App
 import com.example.mygit.R
-import com.example.mygit.data.MockRepositoryImpl
+import com.example.mygit.data.RepositoryImpl
+import com.example.mygit.data.network.RetrofitBuilder
+import com.example.mygit.data.storage.GitRepositoriesCache
+import com.example.mygit.data.storage.GitUsersCache
 import com.example.mygit.databinding.FragmentUsersBinding
 import com.example.mygit.domain.model.GitUser
 import io.reactivex.disposables.CompositeDisposable
@@ -16,7 +19,15 @@ import moxy.ktx.moxyPresenter
 
 class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContract.View {
     private var viewBinding: FragmentUsersBinding? = null
-    private val presenter by moxyPresenter { UsersPresenter(MockRepositoryImpl(), App.router) }
+    private val presenter by moxyPresenter {
+        UsersPresenter(
+            RepositoryImpl(
+                RetrofitBuilder.create(),
+                GitUsersCache(App.getDao()),
+                GitRepositoriesCache(App.getDao())
+            ), App.router
+        )
+    }
     private val compositeDisposable = CompositeDisposable()
     private val adapter = UsersAdapter {
         presenter.onUser(it)
@@ -55,14 +66,14 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersContra
                 Toast.makeText(context, getString(R.string.error), Toast.LENGTH_SHORT).show()
             }
             UsersContract.ViewBehavior.LOADING -> {
-                viewBinding?.progress?.visibility = View.VISIBLE
+                viewBinding?.progressBar?.visibility = View.VISIBLE
             }
         }
     }
 
     private fun hideViews() {
         viewBinding?.rvUsers?.visibility = View.GONE
-        viewBinding?.progress?.visibility = View.GONE
+        viewBinding?.progressBar?.visibility = View.GONE
     }
 
     override fun setUsers(list: List<GitUser>) {
