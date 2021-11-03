@@ -13,5 +13,6 @@ data class GitHubRepository(
     val visibility:String,
     val forks:Int,
     val watchers:Int,
-    val defaultBranch:String
+    val defaultBranch:String,
+    val ownerLogin:String
 ):Parcelable

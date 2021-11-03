@@ -5,7 +5,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitBuilder {
-    const val BASE_URL = "https://api.github.com"
+    private const val BASE_URL = "https://api.github.com"
     fun create(): GithubApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)

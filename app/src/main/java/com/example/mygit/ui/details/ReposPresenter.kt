@@ -1,6 +1,6 @@
 package com.example.mygit.ui.details
 
-import com.example.mygit.data.MockRepositoryImpl
+import com.example.mygit.data.RepositoryImpl
 import com.example.mygit.domain.model.GitHubRepository
 import com.example.mygit.ui.users.Screen
 import com.github.terrakok.cicerone.Router
@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.schedulers.Schedulers
 
-class ReposPresenter(private val repository: MockRepositoryImpl, private val router: Router) :
+class ReposPresenter(private val repository: RepositoryImpl, private val router: Router) :
     UserContract.Presenter() {
     private val compositeDisposable = CompositeDisposable()
     override fun onRepository(gitHubRepository: GitHubRepository) {
@@ -18,19 +18,21 @@ class ReposPresenter(private val repository: MockRepositoryImpl, private val rou
 
     override fun init(name: String) {
         viewState.setState(Loading(true))
-        compositeDisposable += repository.getRepos(name)
+        compositeDisposable += repository
+            .getRepos(name)
             .subscribeOn(Schedulers.io())
             .map {
-                it.map { reposRequest ->
+                it.map { reposEntity ->
                     GitHubRepository(
-                        reposRequest.id,
-                        reposRequest.name,
-                        reposRequest.fullName,
-                        reposRequest.description,
-                        reposRequest.visibility,
-                        reposRequest.forks,
-                        reposRequest.watchers,
-                        reposRequest.defaultBranch
+                        reposEntity.id,
+                        reposEntity.name,
+                        reposEntity.fullName,
+                        reposEntity.description,
+                        reposEntity.visibility,
+                        reposEntity.forks,
+                        reposEntity.watchers,
+                        reposEntity.defaultBranch,
+                        reposEntity.ownerLogin
                     )
                 }
             }

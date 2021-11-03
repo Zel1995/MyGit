@@ -18,5 +18,7 @@ data class ReposRequest(
     @SerializedName("watchers")
     val watchers:Int,
     @SerializedName("default_branch")
-    val defaultBranch:String
+    val defaultBranch:String,
+    @SerializedName("owner")
+    val owner:OwnerRequest
 )

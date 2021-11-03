@@ -5,8 +5,10 @@ import android.view.View
 import android.widget.Toast
 import com.example.mygit.App
 import com.example.mygit.R
-import com.example.mygit.data.MockRepositoryImpl
+import com.example.mygit.data.RepositoryImpl
 import com.example.mygit.data.network.RetrofitBuilder
+import com.example.mygit.data.storage.GitRepositoriesCache
+import com.example.mygit.data.storage.GitUsersCache
 import com.example.mygit.databinding.FragmentReposBinding
 import com.example.mygit.domain.model.GitHubRepository
 import com.example.mygit.domain.model.GitUser
@@ -30,7 +32,10 @@ class ReposFragment : MvpAppCompatFragment(R.layout.fragment_repos), UserContrac
     }
     private val presenter by moxyPresenter {
         ReposPresenter(
-            MockRepositoryImpl(RetrofitBuilder.create()),
+            RepositoryImpl(
+                RetrofitBuilder.create(), GitUsersCache(App.getDao()),
+                GitRepositoriesCache(App.getDao())
+            ),
             App.router
         )
     }
