@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 class EventBus {
-    open class Like(val id:String)
+    open class Like(val id:Long)
 
     private val bus = PublishSubject.create<Like>()
 

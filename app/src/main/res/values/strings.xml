@@ -2,4 +2,8 @@
     <string name="app_name">MyGit</string>
     <string name="success">Success</string>
     <string name="error">Error</string>
+    <string name="def_branch">default branch: </string>
+    <string name="forks">forks: \</string>
+    <string name="watchers">watchers: \</string>
+    <string name="visibility">visibility: \"</string>
 </resources>
